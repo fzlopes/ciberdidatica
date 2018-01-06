@@ -2,15 +2,15 @@
 
 namespace App\Presenters;
 
-use App\Transformers\AdressTransformer;
+use App\Transformers\AddressTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
 /**
- * Class AdressPresenter
+ * Class AddressPresenter
  *
  * @package namespace App\Presenters;
  */
-class AdressPresenter extends FractalPresenter
+class AddressPresenter extends FractalPresenter
 {
     /**
      * Transformer
@@ -19,6 +19,6 @@ class AdressPresenter extends FractalPresenter
      */
     public function getTransformer()
     {
-        return new AdressTransformer();
+        return new AddressTransformer();
     }
 }

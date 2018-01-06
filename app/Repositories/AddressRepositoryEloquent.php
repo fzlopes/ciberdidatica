@@ -4,15 +4,15 @@ namespace App\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\AdressRepository;
-use App\Entities\Adress;
-use App\Validators\AdressValidator;
+use App\Repositories\AddressRepository;
+use App\Entities\Address;
+use App\Validators\AddressValidator;
 
 /**
- * Class AdressRepositoryEloquent
+ * Class AddressRepositoryEloquent
  * @package namespace App\Repositories;
  */
-class AdressRepositoryEloquent extends BaseRepository implements AdressRepository
+class AddressRepositoryEloquent extends BaseRepository implements AddressRepository
 {
     /**
      * Specify Model class name
@@ -21,7 +21,7 @@ class AdressRepositoryEloquent extends BaseRepository implements AdressRepositor
      */
     public function model()
     {
-        return Adress::class;
+        return Address::class;
     }
 
     /**
@@ -32,7 +32,7 @@ class AdressRepositoryEloquent extends BaseRepository implements AdressRepositor
     public function validator()
     {
 
-        return AdressValidator::class;
+        return AddressValidator::class;
     }
 
 

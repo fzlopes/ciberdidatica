@@ -3,22 +3,22 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use App\Entities\Adress;
+use App\Entities\Address;
 
 /**
- * Class AdressTransformer
+ * Class AddressTransformer
  * @package namespace App\Transformers;
  */
-class AdressTransformer extends TransformerAbstract
+class AddressTransformer extends TransformerAbstract
 {
 
     /**
-     * Transform the Adress entity
-     * @param App\Entities\Adress $model
+     * Transform the Address entity
+     * @param App\Entities\Address $model
      *
      * @return array
      */
-    public function transform(Adress $model)
+    public function transform(Address $model)
     {
         return [
             'id'         => (int) $model->id,
