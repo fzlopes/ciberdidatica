@@ -10,6 +10,6 @@ class City extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $fillable = [];
+    protected $fillable = ['name', 'state_id'];
 
 }
