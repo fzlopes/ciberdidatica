@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePromotionsTable extends Migration
+class CreateQuestionsTable extends Migration
 {
 
 	/**
@@ -13,10 +13,13 @@ class CreatePromotionsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('promotions', function(Blueprint $table) {
+		Schema::create('questions', function(Blueprint $table) {
             $table->increments('id');
-
+            $table->text('question');
+            $table->integer('answer_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('answer_id')->references('id')->on('answers');
 		});
 	}
 
@@ -27,7 +30,7 @@ class CreatePromotionsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('promotions');
+		Schema::drop('questions');
 	}
 
 }

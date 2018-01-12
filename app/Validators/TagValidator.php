@@ -5,7 +5,7 @@ namespace App\Validators;
 use \Prettus\Validator\Contracts\ValidatorInterface;
 use \Prettus\Validator\LaravelValidator;
 
-class PeopleValidator extends LaravelValidator
+class TagValidator extends LaravelValidator
 {
 
     protected $rules = [

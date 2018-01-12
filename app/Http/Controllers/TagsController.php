@@ -7,26 +7,26 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\AddressCreateRequest;
-use App\Http\Requests\AddressUpdateRequest;
-use App\Repositories\AddressRepository;
-use App\Validators\AddressValidator;
+use App\Http\Requests\TagCreateRequest;
+use App\Http\Requests\TagUpdateRequest;
+use App\Repositories\TagRepository;
+use App\Validators\TagValidator;
 
 
-class AddressesController extends Controller
+class TagsController extends Controller
 {
 
     /**
-     * @var AddressRepository
+     * @var TagRepository
      */
     protected $repository;
 
     /**
-     * @var AddressValidator
+     * @var TagValidator
      */
     protected $validator;
 
-    public function __construct(AddressRepository $repository, AddressValidator $validator)
+    public function __construct(TagRepository $repository, TagValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
@@ -41,37 +41,37 @@ class AddressesController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $addresses = $this->repository->all();
+        $tags = $this->repository->all();
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $addresses,
+                'data' => $tags,
             ]);
         }
 
-        return view('addresses.index', compact('addresses'));
+        return view('tags.index', compact('tags'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  AddressCreateRequest $request
+     * @param  TagCreateRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(AddressCreateRequest $request)
+    public function store(TagCreateRequest $request)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $address = $this->repository->create($request->all());
+            $tag = $this->repository->create($request->all());
 
             $response = [
-                'message' => 'Address created.',
-                'data'    => $address->toArray(),
+                'message' => 'Tag created.',
+                'data'    => $tag->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -102,16 +102,16 @@ class AddressesController extends Controller
      */
     public function show($id)
     {
-        $address = $this->repository->find($id);
+        $tag = $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
             return response()->json([
-                'data' => $address,
+                'data' => $tag,
             ]);
         }
 
-        return view('addresses.show', compact('address'));
+        return view('tags.show', compact('tag'));
     }
 
 
@@ -125,32 +125,32 @@ class AddressesController extends Controller
     public function edit($id)
     {
 
-        $address = $this->repository->find($id);
+        $tag = $this->repository->find($id);
 
-        return view('addresses.edit', compact('address'));
+        return view('tags.edit', compact('tag'));
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  AddressUpdateRequest $request
+     * @param  TagUpdateRequest $request
      * @param  string            $id
      *
      * @return Response
      */
-    public function update(AddressUpdateRequest $request, $id)
+    public function update(TagUpdateRequest $request, $id)
     {
 
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $address = $this->repository->update($request->all(), $id);
+            $tag = $this->repository->update($request->all(), $id);
 
             $response = [
-                'message' => 'Address updated.',
-                'data'    => $address->toArray(),
+                'message' => 'Tag updated.',
+                'data'    => $tag->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -188,11 +188,11 @@ class AddressesController extends Controller
         if (request()->wantsJson()) {
 
             return response()->json([
-                'message' => 'Address deleted.',
+                'message' => 'Tag deleted.',
                 'deleted' => $deleted,
             ]);
         }
 
-        return redirect()->back()->with('message', 'Address deleted.');
+        return redirect()->back()->with('message', 'Tag deleted.');
     }
 }

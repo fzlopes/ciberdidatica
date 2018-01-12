@@ -3,22 +3,22 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use App\Entities\People;
+use App\Entities\Tag;
 
 /**
- * Class PeopleTransformer
+ * Class TagTransformer
  * @package namespace App\Transformers;
  */
-class PeopleTransformer extends TransformerAbstract
+class TagTransformer extends TransformerAbstract
 {
 
     /**
-     * Transform the People entity
-     * @param App\Entities\People $model
+     * Transform the Tag entity
+     * @param App\Entities\Tag $model
      *
      * @return array
      */
-    public function transform(People $model)
+    public function transform(Tag $model)
     {
         return [
             'id'         => (int) $model->id,

@@ -3,9 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStudentsTable extends Migration
+class CreateGroupsTable extends Migration
 {
-
 	/**
 	 * Run the migrations.
 	 *
@@ -13,13 +12,12 @@ class CreateStudentsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('students', function(Blueprint $table) {
+		Schema::create('groups', function(Blueprint $table) {
             $table->increments('id');
-
+            $table->string('name', 50);
             $table->timestamps();
 		});
 	}
-
 	/**
 	 * Reverse the migrations.
 	 *
@@ -27,7 +25,6 @@ class CreateStudentsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('students');
+		Schema::drop('groups');
 	}
-
 }

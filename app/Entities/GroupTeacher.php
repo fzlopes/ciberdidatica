@@ -10,6 +10,6 @@ class GroupTeacher extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $fillable = ['group_id', 'teacher_id'];
+    protected $fillable = ['teacher_id', 'group_id'];
 
 }

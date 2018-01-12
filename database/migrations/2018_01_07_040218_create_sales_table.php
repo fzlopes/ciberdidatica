@@ -15,8 +15,16 @@ class CreateSalesTable extends Migration
 	{
 		Schema::create('sales', function(Blueprint $table) {
             $table->increments('id');
-
+            $table->date('creation_date');
+            $table->double('descont_value', 10, 2)->nullable();
+            $table->double('total_value', 10, 2);
+            $table->enum('status', ['Emitida', 'Orçamento', 'Cancelada'])->default('Orçamento');
+            $table->text('observation')->nullable();
+            $table->date('date_hour_delivery');
+            $table->integer('student_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('student_id')->references('id')->on('students');
 		});
 	}
 

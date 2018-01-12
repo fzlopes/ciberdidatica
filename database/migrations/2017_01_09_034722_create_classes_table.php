@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdressesTable extends Migration
+class CreateClassesTable extends Migration
 {
 
 	/**
@@ -13,10 +13,14 @@ class CreateAdressesTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('adresses', function(Blueprint $table) {
+		Schema::create('classes', function(Blueprint $table) {
             $table->increments('id');
-
+            $table->string('name', 60);
+            $table->text('description');
+            $table->integer('question_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('question_id')->references('id')->on('questions');
 		});
 	}
 
@@ -27,7 +31,7 @@ class CreateAdressesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('adresses');
+		Schema::drop('classes');
 	}
 
 }
