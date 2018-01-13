@@ -28,7 +28,7 @@ class CreatePromotionsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('promotions');
+		Schema::dropIfExists('promotions');
 	}
 
 }

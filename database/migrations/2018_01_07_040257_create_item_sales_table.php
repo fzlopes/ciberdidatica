@@ -33,7 +33,7 @@ class CreateItemSalesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('item_sales');
+		Schema::dropIfExists('item_sales');
 	}
 
 }

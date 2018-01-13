@@ -30,7 +30,7 @@ class CreateGroupTeachersTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('group_teachers');
+		Schema::dropIfExists('group_teachers');
 	}
 
 }
