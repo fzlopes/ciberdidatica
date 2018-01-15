@@ -9,7 +9,13 @@ class StateValidator extends LaravelValidator
 {
 
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [],
-        ValidatorInterface::RULE_UPDATE => [],
+        ValidatorInterface::RULE_CREATE => [
+            'name' => 'required',
+            'acronym' => 'required',
+        ],
+        ValidatorInterface::RULE_UPDATE => [
+            'name' => 'required',
+            'acronym' => 'required',
+        ],
     ];
 }

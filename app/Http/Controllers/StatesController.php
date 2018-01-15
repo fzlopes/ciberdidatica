@@ -10,8 +10,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\StateCreateRequest;
 use App\Http\Requests\StateUpdateRequest;
 use App\Repositories\StateRepository;
-use App\Validators\StateValidator;
-
+use App\Services\StateService;
 
 class StatesController extends Controller
 {
@@ -22,14 +21,14 @@ class StatesController extends Controller
     protected $repository;
 
     /**
-     * @var StateValidator
+     * @var StateService
      */
-    protected $validator;
+    protected $service;
 
-    public function __construct(StateRepository $repository, StateValidator $validator)
+    public function __construct(StateRepository $repository, StateService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->service    = $service;
     }
 
 
@@ -40,15 +39,7 @@ class StatesController extends Controller
      */
     public function index()
     {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $states = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $states,
-            ]);
-        }
 
         return view('states.index', compact('states'));
     }
@@ -63,35 +54,17 @@ class StatesController extends Controller
     public function store(StateCreateRequest $request)
     {
 
-        try {
+        $request = $this->service->store($request->all());
+        $state = $request['success'] ? $request['data'] : null;
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+        session()->flash('success', [
+            'success' => $request['success'],
+            'messages' => $request['messages'],
+        ]);
 
-            $state = $this->repository->create($request->all());
 
-            $response = [
-                'message' => 'State created.',
-                'data'    => $state->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->route('state.index');
     }
-
 
     /**
      * Display the specified resource.
@@ -102,7 +75,7 @@ class StatesController extends Controller
      */
     public function show($id)
     {
-        $state = $this->repository->find($id);
+        $this->repository->find($id);
 
         if (request()->wantsJson()) {
 
@@ -142,35 +115,16 @@ class StatesController extends Controller
     public function update(StateUpdateRequest $request, $id)
     {
 
-        try {
+        $request = $this->service->update($request->all(), $id);
+        $state = $request['success'] ? $request['data'] : null;
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        session()->flash('success', [
+            'success'  => $request['success'],
+            'messages' => $request['messages'],
+        ]);
 
-            $state = $this->repository->update($request->all(), $id);
 
-            $response = [
-                'message' => 'State updated.',
-                'data'    => $state->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->route('state.index');
     }
 
 
@@ -183,16 +137,15 @@ class StatesController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $request = $this->service->destroy($id);
 
-        if (request()->wantsJson()) {
+        session()->flash('success', [
+            'success' => $request['success'],
+            'messages' => $request['messages'],
+        ]);
 
-            return response()->json([
-                'message' => 'State deleted.',
-                'deleted' => $deleted,
-            ]);
-        }
 
-        return redirect()->back()->with('message', 'State deleted.');
+        return redirect()->route('state.index');
+    }
     }
 }
