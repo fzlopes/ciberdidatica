@@ -10,7 +10,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\CityCreateRequest;
 use App\Http\Requests\CityUpdateRequest;
 use App\Repositories\CityRepository;
-use App\Validators\CityValidator;
+use App\Services\CityService;
+use App\Repositories\StateRepository;
 
 
 class CitiesController extends Controller
@@ -22,14 +23,20 @@ class CitiesController extends Controller
     protected $repository;
 
     /**
-     * @var CityValidator
+     * @var CityService
      */
-    protected $validator;
+    protected $service;
 
-    public function __construct(CityRepository $repository, CityValidator $validator)
+    /**
+     * @var StateRepository
+     */
+    protected $staterRepository;
+
+    public function __construct(CityRepository $repository, CityService $service, StateRepository $stateRepository)
     {
-        $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->repository      = $repository;
+        $this->validator       = $validator;
+        $this->stateRepository = $stateRepository;
     }
 
 
@@ -40,17 +47,10 @@ class CitiesController extends Controller
      */
     public function index()
     {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $cities = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $cities,
-            ]);
-        }
-
-        return view('cities.index', compact('cities'));
+        $states = $this->stateRepository->selectBoxList();
+       
+        return view('cities.index', compact('cities', 'states'));
     }
 
     /**
@@ -63,33 +63,16 @@ class CitiesController extends Controller
     public function store(CityCreateRequest $request)
     {
 
-        try {
+        $request = $this->service->store($request->all());
+        $group = $request['success'] ? $request['data'] : null;
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+        session()->flash('success', [
+            'success' => $request['success'],
+            'messages' => $request['messages'],
+        ]);
 
-            $city = $this->repository->create($request->all());
 
-            $response = [
-                'message' => 'City created.',
-                'data'    => $city->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->route('city.index');
     }
 
 
@@ -103,15 +86,9 @@ class CitiesController extends Controller
     public function show($id)
     {
         $city = $this->repository->find($id);
+        $states = $this->staterRepository->selectBoxList();
 
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $city,
-            ]);
-        }
-
-        return view('cities.show', compact('city'));
+        return view('cities.show', compact('city', 'states'));
     }
 
 
@@ -126,8 +103,9 @@ class CitiesController extends Controller
     {
 
         $city = $this->repository->find($id);
-
-        return view('cities.edit', compact('city'));
+        $states = $this->stateRepository->selectBoxList();
+                
+        return view('cities.edit', compact('city', 'users'));
     }
 
 
@@ -142,35 +120,16 @@ class CitiesController extends Controller
     public function update(CityUpdateRequest $request, $id)
     {
 
-        try {
+        $request = $this->service->update($request->all(), $id);
+        $city = $request['success'] ? $request['data'] : null;
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        session()->flash('success', [
+            'success' => $request['success'],
+            'messages' => $request['messages'],
+        ]);
 
-            $city = $this->repository->update($request->all(), $id);
 
-            $response = [
-                'message' => 'City updated.',
-                'data'    => $city->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->route('cities.index');
     }
 
 
@@ -183,16 +142,14 @@ class CitiesController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $request = $this->service->destroy($id);
+       
+        session()->flash('success', [
+            'success'  => $request['success'],
+            'messages' => $request['messages'], 
+        ]);
 
-        if (request()->wantsJson()) {
 
-            return response()->json([
-                'message' => 'City deleted.',
-                'deleted' => $deleted,
-            ]);
-        }
-
-        return redirect()->back()->with('message', 'City deleted.');
+        return redirect()->route('cities.index');
     }
 }

@@ -3,16 +3,16 @@
 namespace App\Services;
 
 use Prettus\Validator\Contracts\ValidatorInterface;
-use App\Repositories\StateRepository;
-use App\Validators\StateValidator;
+use App\Repositories\CityRepository;
+use App\Validators\CityValidator;
 use Exception;
 
-class StateService
+class CityService
 {
     private $repository;
     private $validator;
 
-    public function __construct(StateRepository $repository, StateValidator $validator)
+    public function __construct(CityRepository $repository, CityValidator $validator)
     {
         $this->repository = $repository;
         $this->validator = $validator;
@@ -23,12 +23,12 @@ class StateService
     {
         try {
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
-            $state = $this->repository->create($data);
+            $city = $this->repository->create($data);
 
             return [
                 'success' => true,
-                'messages' => "Estado cadastrado.",
-                'data' => $state,
+                'messages' => "Cidade cadastrada.",
+                'data' => $city,
 
             ];
         } catch (Exception $e) {
@@ -43,12 +43,12 @@ class StateService
     {
         try {
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
-            $state = $this->repository->update($data, $id);
+            $city = $this->repository->update($data, $id);
 
             return [
                 'success' => true,
-                'messages' => "Estado alterado.",
-                'data' => $state,
+                'messages' => "Cidade alterada.",
+                'data' => $city,
 
             ];
         } catch (Exception $e) {
@@ -66,7 +66,7 @@ class StateService
 
             return [
                 'success' => true,
-                'messages' => "Estado removido.",
+                'messages' => "Cidade removida.",
                 'data' => null,
 
             ];

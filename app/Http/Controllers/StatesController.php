@@ -63,7 +63,7 @@ class StatesController extends Controller
         ]);
 
 
-        return redirect()->route('state.index');
+        return redirect()->route('states.index');
     }
 
     /**
@@ -124,7 +124,7 @@ class StatesController extends Controller
         ]);
 
 
-        return redirect()->route('state.index');
+        return redirect()->route('states.index');
     }
 
 
@@ -145,7 +145,7 @@ class StatesController extends Controller
         ]);
 
 
-        return redirect()->route('state.index');
+        return redirect()->route('states.index');
     }
     }
 }

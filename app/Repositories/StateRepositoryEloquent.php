@@ -14,6 +14,12 @@ use App\Validators\StateValidator;
  */
 class StateRepositoryEloquent extends BaseRepository implements StateRepository
 {
+
+    public function selectBoxList($descricao = 'name', $chave = 'id')
+    {
+        return $this->model->pluck($descricao, $chave)->all();
+    }
+    
     /**
      * Specify Model class name
      *
